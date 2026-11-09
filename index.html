@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Смета ремонта за 2 минуты</title>
+  <meta name="description" content="Рассчитайте стоимость ремонта квартиры онлайн: работы, материалы, сроки. Без выезда замерщика.">
+  <meta name="theme-color" content="#F3EFE7">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Unbounded:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="top">
+    <div class="wrap top__row">
+      <a class="logo" href="#" aria-label="На главную">
+        <span class="logo__mark" aria-hidden="true"></span>
+        <span data-brand="name"></span>
+      </a>
+      <a class="top__phone" data-brand="phone" href="#"></a>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="hero">
+      <p class="eyebrow" data-brand="eyebrow"></p>
+      <h1><span data-brand="title"></span> <span class="accent" data-brand="titleAccent"></span></h1>
+      <p class="hero__lead" data-brand="lead"></p>
+    </section>
+
+    <div class="layout">
+      <form class="steps" id="calc" novalidate>
+        <!-- 1. Город -->
+        <fieldset class="step">
+          <legend><span class="step__num">1</span>Где квартира?</legend>
+          <div class="chips" data-group="city"></div>
+        </fieldset>
+
+        <!-- 2. Тип жилья -->
+        <fieldset class="step">
+          <legend><span class="step__num">2</span>Тип жилья</legend>
+          <div class="cards cards--3" data-group="housing"></div>
+        </fieldset>
+
+        <!-- 3. Площадь -->
+        <fieldset class="step">
+          <legend><span class="step__num">3</span>Площадь и комнаты</legend>
+          <div class="area">
+            <div class="area__top">
+              <label for="area">Общая площадь</label>
+              <output id="areaOut" for="area" class="area__val">54 м²</output>
+            </div>
+            <input type="range" id="area" min="15" max="200" step="1" value="54">
+            <div class="area__scale"><span>15 м²</span><span>200 м²</span></div>
+          </div>
+          <div class="counters">
+            <div class="counter">
+              <span class="counter__label">Комнат</span>
+              <div class="counter__ctrl">
+                <button type="button" data-count="rooms" data-d="-1" aria-label="Меньше комнат">−</button>
+                <output id="roomsOut">2</output>
+                <button type="button" data-count="rooms" data-d="1" aria-label="Больше комнат">+</button>
+              </div>
+            </div>
+            <div class="counter">
+              <span class="counter__label">Санузлов</span>
+              <div class="counter__ctrl">
+                <button type="button" data-count="baths" data-d="-1" aria-label="Меньше санузлов">−</button>
+                <output id="bathsOut">1</output>
+                <button type="button" data-count="baths" data-d="1" aria-label="Больше санузлов">+</button>
+              </div>
+            </div>
+          </div>
+          <div class="plan" aria-hidden="true">
+            <svg id="plan" viewBox="0 0 600 240" preserveAspectRatio="xMidYMid meet"></svg>
+          </div>
+        </fieldset>
+
+        <!-- 4. Тип ремонта -->
+        <fieldset class="step">
+          <legend><span class="step__num">4</span>Какой ремонт нужен?</legend>
+          <div class="cards cards--3" data-group="repair"></div>
+        </fieldset>
+
+        <!-- 5. Материалы -->
+        <fieldset class="step">
+          <legend><span class="step__num">5</span>Класс материалов</legend>
+          <div class="seg" data-group="materials"></div>
+        </fieldset>
+
+        <!-- 6. Доп. работы -->
+        <fieldset class="step">
+          <legend><span class="step__num">6</span>Дополнительно</legend>
+          <div class="extras" id="extras"></div>
+        </fieldset>
+      </form>
+
+      <aside class="summary" id="summary">
+        <div class="summary__card" aria-live="polite">
+          <p class="summary__label">Стоимость ремонта</p>
+          <p class="summary__total"><span id="total">0</span>&nbsp;₽</p>
+          <p class="summary__range" id="range"></p>
+
+          <div class="bar" id="bar" role="img" aria-label="Структура стоимости">
+            <span class="bar__seg bar__seg--work"></span>
+            <span class="bar__seg bar__seg--mat"></span>
+            <span class="bar__seg bar__seg--extra"></span>
+          </div>
+
+          <dl class="lines">
+            <div class="line"><dt><i class="dot dot--work"></i>Работы</dt><dd id="sWork">0 ₽</dd></div>
+            <div class="line"><dt><i class="dot dot--mat"></i>Материалы</dt><dd id="sMat">0 ₽</dd></div>
+            <div class="line"><dt><i class="dot dot--extra"></i>Доп. работы</dt><dd id="sExtra">0 ₽</dd></div>
+          </dl>
+
+          <div class="facts">
+            <div class="fact"><span class="fact__k">За м²</span><span class="fact__v" id="perM">0 ₽</span></div>
+            <div class="fact"><span class="fact__k">Срок</span><span class="fact__v" id="term">—</span></div>
+          </div>
+
+          <details class="details">
+            <summary>Подробная смета</summary>
+            <ul class="details__list" id="details"></ul>
+          </details>
+
+          <button type="button" class="cta" id="ctaOpen">Получить точный расчёт</button>
+          <div class="summary__tools">
+            <button type="button" class="link" id="copyBtn">Скопировать смету</button>
+            <button type="button" class="link" id="printBtn">Сохранить PDF</button>
+          </div>
+          <p class="summary__fine">Предварительный расчёт. Точная цена — после бесплатного замера, фиксируется в договоре.</p>
+        </div>
+      </aside>
+    </div>
+
+    <section class="trust" id="trust"></section>
+  </main>
+
+  <footer class="foot wrap" id="foot"></footer>
+
+  <!-- Мобильная панель итога -->
+  <div class="dock" id="dock">
+    <div>
+      <span class="dock__k">Итого</span>
+      <span class="dock__v"><span id="dockTotal">0</span> ₽</span>
+    </div>
+    <button type="button" class="dock__btn" id="dockBtn">Смета</button>
+  </div>
+
+  <!-- Модальное окно заявки -->
+  <dialog class="modal" id="modal" aria-labelledby="modalTitle">
+    <form method="dialog" class="modal__box" id="leadForm" novalidate>
+      <button type="submit" value="close" class="modal__x" aria-label="Закрыть" formnovalidate>×</button>
+      <h2 id="modalTitle">Точный расчёт и бесплатный замер</h2>
+      <p class="modal__sub">Пришлём смету в Telegram и согласуем время замера.</p>
+      <label class="field">
+        <span>Имя</span>
+        <input type="text" id="leadName" autocomplete="given-name" placeholder="Как к вам обращаться">
+      </label>
+      <label class="field">
+        <span>Телефон</span>
+        <input type="tel" id="leadPhone" autocomplete="tel" inputmode="tel" placeholder="+7 (___) ___-__-__" required>
+      </label>
+      <p class="field__err" id="leadErr" hidden>Введите номер телефона полностью</p>
+      <label class="check">
+        <input type="checkbox" id="leadAgree" checked>
+        <span>Согласен на обработку персональных данных</span>
+      </label>
+      <button type="button" class="cta" id="leadSend">Отправить в Telegram</button>
+      <p class="modal__fine">Откроется Telegram с готовым сообщением — останется нажать «Отправить».</p>
+    </form>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
